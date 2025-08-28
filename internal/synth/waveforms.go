@@ -3,9 +3,9 @@ package synth
 import "math"
 
 type Sine struct {
-	Amplitude float64
-	Frequency float64
-	Duration  float64
+	Amplitude Amplitude
+	Duration  Seconds
+	Frequency Frequency
 }
 
 func (self *Sine) Stream(sampling int, sink chan<- int16) error {

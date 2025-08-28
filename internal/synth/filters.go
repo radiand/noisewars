@@ -3,8 +3,8 @@ package synth
 // LinearAD is a simple envelope that controls fade-in and fade-out.
 type LinearAD struct {
 	Sound  FiniteSound
-	Attack float64
-	Decay  float64
+	Attack Seconds
+	Decay  Seconds
 }
 
 func (self *LinearAD) Stream(sampling int, sink chan<- int16) error {

@@ -1,7 +1,7 @@
 package synth
 
 type Pause struct {
-	Duration float64
+	Duration Seconds
 }
 
 func (self *Pause) Stream(sampling int, sink chan<- int16) error {
@@ -14,7 +14,7 @@ func (self *Pause) Stream(sampling int, sink chan<- int16) error {
 
 func Punch(amplitude Amplitude, duration Seconds, frequency Frequency) Sound {
 	return &LinearADSR{
-		Sound:   &Sine{Amplitude: amplitude, Frequency: frequency, Duration: duration},
+		Sound:   &Sine{Amplitude: amplitude, Duration: duration, Frequency: frequency},
 		Attack:  0.05,
 		Decay:   0.04,
 		Sustain: 0.4,

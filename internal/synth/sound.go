@@ -11,7 +11,7 @@ type Sound interface {
 
 // Finite defines sounds that have known duration.
 type Finite interface {
-	Time() float64
+	Time() Seconds
 }
 
 // FiniteSound is streamable and finite.
