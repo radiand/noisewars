@@ -5,6 +5,17 @@ type Sound interface {
 	Stream(sampling int, sink chan<- int16) error
 }
 
+// Finite defines sounds that have known duration.
+type Finite interface {
+	Time() float64
+}
+
+// FiniteSound is streamable and finite.
+type FiniteSound interface {
+	Sound
+	Finite
+}
+
 // Sequence organizes Sounds in order.
 type Sequence []Sound
 
