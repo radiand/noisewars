@@ -12,14 +12,24 @@ import (
 import . "github.com/radiand/noisewars/internal/synth"
 
 var presets = map[string]Sequence{
-	"TestPreset": {
-		&Infinite{
-			Sound: &Sequence{
-				&Punch{Attack: 0.01, Decay: 0.1, Sustain: 0.3, Release: 0.2, Duration: 0.4, Frequency: 80, Amplitude: 1.0},
-				&Pause{Duration: 0.4},
-				&Punch{Attack: 0.01, Decay: 0.1, Sustain: 0.3, Release: 0.2, Duration: 0.4, Frequency: 60, Amplitude: 1.0},
-				&Pause{Duration: 0.4},
+	"P1": {
+		&Sequence{
+			&Punch{Attack: 0.01, Decay: 0.1, Sustain: 0.3, Release: 0.2, Duration: 0.4, Frequency: 80, Amplitude: 1.0},
+			&Pause{Duration: 0.4},
+			&Punch{Attack: 0.01, Decay: 0.1, Sustain: 0.3, Release: 0.2, Duration: 0.4, Frequency: 60, Amplitude: 1.0},
+			&Pause{Duration: 0.4},
+		},
+	},
+	"P2": {
+		&Sequence{
+			&LinearAD{
+				Sound:  &Sine{Amplitude: 1.0, Frequency: 120.0, Duration: 1},
+				Attack: 0.4,
+				Decay:  0.4,
 			},
+			&Pause{Duration: 0.2},
+			&Sine{Amplitude: 1.0, Frequency: 60.0, Duration: 0.4},
+			&Pause{Duration: 0.2},
 		},
 	},
 }
