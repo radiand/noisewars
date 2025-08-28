@@ -8,51 +8,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"sync"
 )
 import . "github.com/radiand/noisewars/internal/synth"
-
-// Player manages playback, looping, and graceful shutdown.
-type Player struct {
-	sampleRate int
-	out        chan int16
-	done       chan struct{}
-	wg         sync.WaitGroup
-}
-
-func NewPlayer(sampleRate int, out chan int16) *Player {
-	return &Player{
-		sampleRate: sampleRate,
-		out:        out,
-		done:       make(chan struct{}),
-	}
-}
-
-// Play runs the given Sound until done or error.
-func (self *Player) Play(s Sound) error {
-	self.wg.Add(1)
-	defer self.wg.Done()
-	defer close(self.out)
-
-	playErrCh := make(chan error, 1)
-
-	go func() {
-		playErrCh <- s.Stream(self.sampleRate, self.out)
-	}()
-
-	select {
-	case <-self.done:
-		return nil
-	case err := <-playErrCh:
-		return err
-	}
-}
-
-// Stop signals the player to stop playback.
-func (self *Player) Stop() {
-	close(self.done)
-	self.wg.Wait()
-}
 
 var presets = map[string]Sequence{
 	"TestPreset": {
