@@ -55,8 +55,3 @@ func (self *Infinite) Stream(sampling int, sink chan<- int16) error {
 		}
 	}
 }
-
-type Bound[T, U any] struct {
-	Min T
-	Max U
-}
