@@ -1,5 +1,7 @@
 package synth
 
+import "math/rand"
+
 type Pause struct {
 	Duration Seconds
 }
@@ -20,4 +22,17 @@ func Punch(amplitude Amplitude, duration Seconds, frequency Frequency) Streamer 
 		Sustain: 0.4,
 		Release: 0.2,
 	}
+}
+
+// Chaotic adds random pause after the sound.
+type Chaotic struct {
+	Sound Streamer
+	Pause Bound[Milliseconds, Milliseconds]
+}
+
+func (self *Chaotic) Stream(sampling int, sink chan<- int16) error {
+	self.Sound.Stream(sampling, sink)
+	pause := &Pause{Duration: float64(rand.Intn(self.Pause.Max-self.Pause.Min)+self.Pause.Min) / 1000}
+	pause.Stream(sampling, sink)
+	return nil
 }
