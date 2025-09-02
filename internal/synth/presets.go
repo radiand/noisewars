@@ -25,4 +25,14 @@ var Presets = map[string]Streamer{
 		0.6,
 		0.1,
 	},
+	"P6": &Sequence{
+		&Envelope{
+			&VaryingSine{randomf64(0.5, 1.0), 0.3, randomf64(40.0, 60.0)},
+			0.05,
+			0.04,
+			0.6,
+			0.1,
+		},
+		&Pause{0.2},
+	},
 }

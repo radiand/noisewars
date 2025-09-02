@@ -22,6 +22,29 @@ func (self *Sine) Time() float64 {
 	return self.Duration
 }
 
+// VaryingSine allows to inject providers that can modify Sine parameters in
+// runtime.
+type VaryingSine struct {
+	Amplitude Provider[Amplitude]
+	Duration  Seconds
+	Frequency Provider[Frequency]
+}
+
+func (self *VaryingSine) Stream(sampling int, sink chan<- int16) error {
+	totalSamples := int(self.Duration * float64(sampling))
+	angularFreq := 2 * math.Pi * self.Frequency() / float64(sampling)
+	amplitude := self.Amplitude()
+
+	for i := range totalSamples {
+		sink <- int16(amplitude * math.Sin(angularFreq*float64(i)) * math.MaxInt16)
+	}
+	return nil
+}
+
+func (self *VaryingSine) Time() float64 {
+	return self.Duration
+}
+
 // SweepSine linearly changes frequency over duration.
 type SweepSine struct {
 	Amplitude Amplitude
