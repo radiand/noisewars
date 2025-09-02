@@ -14,4 +14,15 @@ var Presets = map[string]Streamer{
 		&Pause{Duration: 0.2},
 	},
 	"P4": &Chaotic{Punch(1.0, 0.3, 60), Bound[Milliseconds, Milliseconds]{10, 400}},
+	"P5": &Envelope{
+		&Sequence{
+			&SweepSine{1.0, 0.4, 50, 80},
+			&Sine{1.0, 0.2, 80},
+			&SweepSine{1.0, 0.4, 80, 50},
+		},
+		0.05,
+		0.05,
+		0.6,
+		0.1,
+	},
 }
