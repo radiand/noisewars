@@ -11,32 +11,13 @@ import (
 )
 import . "github.com/radiand/noisewars/internal/synth"
 
-var presets = map[string]Sequence{
-	"P2": {
-		&Sequence{
-			&LinearAD{
-				Sound:  &Sine{Amplitude: 1.0, Frequency: 120.0, Duration: 1},
-				Attack: 0.4,
-				Decay:  0.4,
-			},
-			&Pause{Duration: 0.2},
-		},
-	},
-	"P3": {
-		&Sequence{
-			Punch(1.0, 0.3, 60),
-			&Pause{Duration: 0.2},
-		},
-	},
-}
-
 func main() {
 	presetFlag := flag.String("preset", "TestPreset", "Name of preset to play")
 	rateFlag := flag.Int("rate", 44100, "Sample rate in Hz")
 	loopFlag := flag.Bool("loop", false, "Play sequence repeatedly until interrupted")
 	flag.Parse()
 
-	sequence, ok := presets[*presetFlag]
+	sequence, ok := Presets[*presetFlag]
 	if !ok {
 		fmt.Fprintf(os.Stderr, "Preset %q not found\n", *presetFlag)
 		os.Exit(1)
