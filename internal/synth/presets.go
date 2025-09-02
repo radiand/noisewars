@@ -2,10 +2,10 @@ package synth
 
 var Presets = map[string]Streamer{
 	"P2": &Sequence{
-		&LinearAD{
-			Sound:  &Sine{Amplitude: 1.0, Frequency: 120.0, Duration: 1},
-			Attack: 0.4,
-			Decay:  0.4,
+		&Fade{
+			Sound: &Sine{Amplitude: 1.0, Frequency: 120.0, Duration: 1},
+			In:    0.4,
+			Out:   0.4,
 		},
 		&Pause{Duration: 0.2},
 	},

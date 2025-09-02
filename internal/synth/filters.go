@@ -1,16 +1,16 @@
 package synth
 
-// LinearAD is a simple envelope that controls fade-in and fade-out.
-type LinearAD struct {
-	Sound  FiniteStreamer
-	Attack Seconds
-	Decay  Seconds
+// Fade is a simple envelope that controls fade-in and fade-out.
+type Fade struct {
+	Sound FiniteStreamer
+	In    Seconds
+	Out   Seconds
 }
 
-func (self *LinearAD) Stream(sampling int, sink chan<- int16) error {
+func (self *Fade) Stream(sampling int, sink chan<- int16) error {
 	totalSamples := int(self.Sound.Time() * float64(sampling))
-	attackSamples := int(self.Attack * float64(sampling))
-	decaySamples := int(self.Decay * float64(sampling))
+	attackSamples := int(self.In * float64(sampling))
+	releaseSamples := int(self.Out * float64(sampling))
 	internalSink := make(chan int16, 1024)
 
 	go self.Sound.Stream(sampling, internalSink)
@@ -22,15 +22,15 @@ func (self *LinearAD) Stream(sampling int, sink chan<- int16) error {
 			envelopeFactor = float64(i) / float64(attackSamples)
 		}
 		if i >= totalSamples-attackSamples {
-			envelopeFactor = 1.0 - float64(i-(totalSamples-attackSamples))/float64(decaySamples)
+			envelopeFactor = 1.0 - float64(i-(totalSamples-attackSamples))/float64(releaseSamples)
 		}
 		sink <- int16(float64(inputSample) * envelopeFactor)
 	}
 	return nil
 }
 
-// LinearADSR implements typical envelope.
-type LinearADSR struct {
+// Envelope implements linear ADSR envelope.
+type Envelope struct {
 	Sound   FiniteStreamer
 	Attack  Seconds
 	Decay   Seconds
@@ -38,7 +38,7 @@ type LinearADSR struct {
 	Release Seconds
 }
 
-func (self *LinearADSR) Stream(sampling int, sink chan<- int16) error {
+func (self *Envelope) Stream(sampling int, sink chan<- int16) error {
 	totalSamples := self.Sound.Time() * float64(sampling)
 	attackSamples := self.Attack * float64(sampling)
 	decaySamples := self.Decay * float64(sampling)
