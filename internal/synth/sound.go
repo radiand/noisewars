@@ -3,7 +3,6 @@ package synth
 type Amplitude = float64
 type Frequency = float64
 type Seconds = float64
-type Milliseconds = int
 
 // Streamer generates 16bit samples at given sampling rate.
 type Streamer interface {

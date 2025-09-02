@@ -31,13 +31,15 @@ func Punch(amplitude Amplitude, duration Seconds, frequency Frequency) FiniteStr
 // Chaotic adds random pause after the sound.
 type Chaotic struct {
 	Sound    Streamer
-	MinPause Milliseconds
-	MaxPause Milliseconds
+	MinPause Seconds
+	MaxPause Seconds
 }
 
 func (self *Chaotic) Stream(sampling int, sink chan<- int16) error {
 	self.Sound.Stream(sampling, sink)
-	pause := &Pause{Duration: float64(rand.Intn(self.MaxPause-self.MinPause)+self.MinPause) / 1000}
+	minPauseMs := int(self.MinPause * 1000)
+	maxPauseMs := int(self.MaxPause * 1000)
+	pause := &Pause{Duration: float64(rand.Intn(maxPauseMs-minPauseMs)+minPauseMs) / 1000}
 	pause.Stream(sampling, sink)
 	return nil
 }
