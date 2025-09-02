@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"os"
 )
-import . "github.com/radiand/noisewars/internal/synth"
+import "github.com/radiand/noisewars/internal/synth"
 
 func main() {
 	presetFlag := flag.String("preset", "TestPreset", "Name of preset to play")
@@ -17,15 +17,15 @@ func main() {
 	loopFlag := flag.Bool("loop", false, "Play sequence repeatedly until interrupted")
 	flag.Parse()
 
-	sequence, ok := Presets[*presetFlag]
+	sequence, ok := synth.Presets[*presetFlag]
 	if !ok {
 		fmt.Fprintf(os.Stderr, "Preset %q not found\n", *presetFlag)
 		os.Exit(1)
 	}
 
-	var wrappedSequence Streamer = sequence
+	var wrappedSequence synth.Streamer = sequence
 	if *loopFlag {
-		wrappedSequence = &Infinite{Sound: sequence}
+		wrappedSequence = &synth.Infinite{Sound: sequence}
 	}
 
 	sampling := *rateFlag
