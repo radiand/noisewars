@@ -29,6 +29,10 @@ func (self *Fade) Stream(sampling int, sink chan<- int16) error {
 	return nil
 }
 
+func (self *Fade) Time() Seconds {
+	return self.Sound.Time()
+}
+
 // Envelope implements linear ADSR envelope.
 type Envelope struct {
 	Sound   FiniteStreamer
@@ -73,4 +77,8 @@ func (self *Envelope) Stream(sampling int, sink chan<- int16) error {
 		sink <- int16(float64(inputSample) * envelopeFactor)
 	}
 	return nil
+}
+
+func (self *Envelope) Time() Seconds {
+	return self.Sound.Time()
 }

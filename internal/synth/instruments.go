@@ -14,7 +14,11 @@ func (self *Pause) Stream(sampling int, sink chan<- int16) error {
 	return nil
 }
 
-func Punch(amplitude Amplitude, duration Seconds, frequency Frequency) Streamer {
+func (self *Pause) Time() Seconds {
+	return self.Duration
+}
+
+func Punch(amplitude Amplitude, duration Seconds, frequency Frequency) FiniteStreamer {
 	return &Envelope{
 		Sound:   &Sine{Amplitude: amplitude, Duration: duration, Frequency: frequency},
 		Attack:  0.05,

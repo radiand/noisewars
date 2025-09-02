@@ -22,7 +22,7 @@ type FiniteStreamer interface {
 }
 
 // Sequence organizes Streamers in order.
-type Sequence []Streamer
+type Sequence []FiniteStreamer
 
 func (self Sequence) Stream(sampling int, sink chan<- int16) error {
 	for _, event := range self {
@@ -32,6 +32,14 @@ func (self Sequence) Stream(sampling int, sink chan<- int16) error {
 		}
 	}
 	return nil
+}
+
+func (self Sequence) Time() Seconds {
+	overall := 0.0
+	for _, streamer := range self {
+		overall += streamer.Time()
+	}
+	return overall
 }
 
 // Infinite plays same sound infinitely.
