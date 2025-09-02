@@ -42,7 +42,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	var wrappedSequence Sound = sequence
+	var wrappedSequence Streamer = sequence
 	if *loopFlag {
 		wrappedSequence = &Infinite{Sound: sequence}
 	}

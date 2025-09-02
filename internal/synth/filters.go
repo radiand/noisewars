@@ -2,7 +2,7 @@ package synth
 
 // LinearAD is a simple envelope that controls fade-in and fade-out.
 type LinearAD struct {
-	Sound  FiniteSound
+	Sound  FiniteStreamer
 	Attack Seconds
 	Decay  Seconds
 }
@@ -31,7 +31,7 @@ func (self *LinearAD) Stream(sampling int, sink chan<- int16) error {
 
 // LinearADSR implements typical envelope.
 type LinearADSR struct {
-	Sound   FiniteSound
+	Sound   FiniteStreamer
 	Attack  Seconds
 	Decay   Seconds
 	Sustain Amplitude

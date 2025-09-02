@@ -4,8 +4,8 @@ type Amplitude = float64
 type Frequency = float64
 type Seconds = float64
 
-// Sound generates 16bit samples at given sampling rate.
-type Sound interface {
+// Streamer generates 16bit samples at given sampling rate.
+type Streamer interface {
 	Stream(sampling int, sink chan<- int16) error
 }
 
@@ -14,14 +14,14 @@ type Finite interface {
 	Time() Seconds
 }
 
-// FiniteSound is streamable and finite.
-type FiniteSound interface {
-	Sound
+// FiniteStreamer is streamable and finite.
+type FiniteStreamer interface {
+	Streamer
 	Finite
 }
 
-// Sequence organizes Sounds in order.
-type Sequence []Sound
+// Sequence organizes Streamers in order.
+type Sequence []Streamer
 
 func (self Sequence) Stream(sampling int, sink chan<- int16) error {
 	for _, event := range self {
@@ -35,7 +35,7 @@ func (self Sequence) Stream(sampling int, sink chan<- int16) error {
 
 // Infinite plays same sound infinitely.
 type Infinite struct {
-	Sound Sound
+	Sound Streamer
 }
 
 func (self *Infinite) Stream(sampling int, sink chan<- int16) error {
