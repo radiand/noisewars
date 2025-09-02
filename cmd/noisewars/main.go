@@ -45,10 +45,8 @@ func main() {
 		errorChannel <- wrappedSequence.Stream(sampling, sink)
 	}()
 
-	select {
-	case err := <-errorChannel:
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error playing sound: %v\n", err)
-		}
+	err := <-errorChannel
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error playing sound: %v\n", err)
 	}
 }
