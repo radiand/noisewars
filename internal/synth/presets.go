@@ -32,4 +32,26 @@ var Presets = map[string]Streamer{
 		},
 		&VaryingPause{randomf64(0.5, 2.0)},
 	},
+	"Kick": &StaticSequence{
+		&Envelope{
+			Sound: &Mixer{
+				&SweepSine{
+					Amplitude: 1.0,
+					Duration:  0.3,
+					StartFreq: 120,
+					EndFreq:   50,
+				},
+				&Sine{
+					Amplitude: 1.0,
+					Duration:  0.3,
+					Frequency: 50,
+				},
+			},
+			Attack:  0.005,
+			Decay:   0.1,
+			Sustain: 0.8,
+			Release: 0.015,
+		},
+		&Pause{0.2},
+	},
 }
