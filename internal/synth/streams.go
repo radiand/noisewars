@@ -5,21 +5,21 @@ type Streamer interface {
 	Stream(sampling int, sink chan<- int16) error
 }
 
-// Finite defines sounds that have known duration.
-type Finite interface {
+// Timer defines sounds that have known duration.
+type Timer interface {
 	Time() Seconds
 }
 
-// FiniteStreamer is streamable and finite.
-type FiniteStreamer interface {
+// StaticStreamer is streamable and has known, deterministic duration.
+type StaticStreamer interface {
 	Streamer
-	Finite
+	Timer
 }
 
-// Sequence organizes Streamers in order.
-type Sequence []FiniteStreamer
+// StaticSequence organizes streams in order.
+type StaticSequence []StaticStreamer
 
-func (self Sequence) Stream(sampling int, sink chan<- int16) error {
+func (self StaticSequence) Stream(sampling int, sink chan<- int16) error {
 	for _, event := range self {
 		err := event.Stream(sampling, sink)
 		if err != nil {
@@ -29,7 +29,7 @@ func (self Sequence) Stream(sampling int, sink chan<- int16) error {
 	return nil
 }
 
-func (self Sequence) Time() Seconds {
+func (self StaticSequence) Time() Seconds {
 	overall := 0.0
 	for _, streamer := range self {
 		overall += streamer.Time()
@@ -37,10 +37,12 @@ func (self Sequence) Time() Seconds {
 	return overall
 }
 
-// Stream sets Streamers in order and does not require them to have known duration.
-type Stream []Streamer
+// DynamicSequence organizes streams in order. It is more relaxed than
+// StaticSequence because it does not require streams to have known,
+// deterministic duration.
+type DynamicSequence []Streamer
 
-func (self Stream) Stream(sampling int, sink chan<- int16) error {
+func (self DynamicSequence) Stream(sampling int, sink chan<- int16) error {
 	for _, event := range self {
 		err := event.Stream(sampling, sink)
 		if err != nil {

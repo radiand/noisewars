@@ -1,7 +1,7 @@
 package synth
 
 var Presets = map[string]Streamer{
-	"P2": &Sequence{
+	"P2": &StaticSequence{
 		&Fade{
 			Sound: &Sine{Amplitude: 1.0, Frequency: 120.0, Duration: 1},
 			In:    0.4,
@@ -9,12 +9,12 @@ var Presets = map[string]Streamer{
 		},
 		&Pause{Duration: 0.2},
 	},
-	"P3": &Sequence{
+	"P3": &StaticSequence{
 		Punch(1.0, 0.3, 60),
 		&Pause{Duration: 0.2},
 	},
 	"P5": &Envelope{
-		&Sequence{
+		&StaticSequence{
 			&SweepSine{1.0, 0.4, 50, 80},
 			&Sine{1.0, 0.2, 80},
 			&SweepSine{1.0, 0.4, 80, 50},
@@ -24,7 +24,7 @@ var Presets = map[string]Streamer{
 		0.6,
 		0.1,
 	},
-	"P6": &Stream{
+	"P6": &DynamicSequence{
 		&Envelope{
 			&VaryingSine{randomf64(0.6, 1.0), 0.2, randomf64(50.0, 80.0)},
 			0.02,

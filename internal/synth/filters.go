@@ -2,7 +2,7 @@ package synth
 
 // Fade is a simple envelope that controls fade-in and fade-out.
 type Fade struct {
-	Sound FiniteStreamer
+	Sound StaticStreamer
 	In    Seconds
 	Out   Seconds
 }
@@ -35,7 +35,7 @@ func (self *Fade) Time() Seconds {
 
 // Envelope implements linear ADSR envelope.
 type Envelope struct {
-	Sound   FiniteStreamer
+	Sound   StaticStreamer
 	Attack  Seconds
 	Decay   Seconds
 	Sustain Amplitude
