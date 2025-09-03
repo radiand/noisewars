@@ -1,5 +1,7 @@
 package synth
 
+import "fmt"
+
 // Fade is a simple envelope that controls fade-in and fade-out.
 type Fade struct {
 	Sound StaticStreamer
@@ -43,6 +45,10 @@ type Envelope struct {
 }
 
 func (self *Envelope) Stream(sampling int, sink chan<- int16) error {
+	if err := self.verify(); err != nil {
+		return err
+	}
+
 	totalSamples := self.Sound.Time() * float64(sampling)
 	attackSamples := self.Attack * float64(sampling)
 	decaySamples := self.Decay * float64(sampling)
@@ -81,4 +87,15 @@ func (self *Envelope) Stream(sampling int, sink chan<- int16) error {
 
 func (self *Envelope) Time() Seconds {
 	return self.Sound.Time()
+}
+
+func (self *Envelope) verify() error {
+	fxDuration := self.Attack + self.Decay + self.Release
+	if fxDuration > self.Sound.Time() {
+		return fmt.Errorf(
+			"Envelope parameters are longer than sound (%.2f + %.2f + %.2f > %.2f)",
+			self.Attack, self.Decay, self.Release, self.Sound.Time(),
+		)
+	}
+	return nil
 }
