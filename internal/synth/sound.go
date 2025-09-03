@@ -41,6 +41,19 @@ func (self Sequence) Time() Seconds {
 	return overall
 }
 
+// Stream sets Streamers in order and does not require them to have known duration.
+type Stream []Streamer
+
+func (self Stream) Stream(sampling int, sink chan<- int16) error {
+	for _, event := range self {
+		err := event.Stream(sampling, sink)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // Infinite plays same sound infinitely.
 type Infinite struct {
 	Sound Streamer

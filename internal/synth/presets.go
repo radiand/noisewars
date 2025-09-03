@@ -13,7 +13,6 @@ var Presets = map[string]Streamer{
 		Punch(1.0, 0.3, 60),
 		&Pause{Duration: 0.2},
 	},
-	"P4": &Chaotic{Punch(1.0, 0.3, 60), 0.01, 0.4},
 	"P5": &Envelope{
 		&Sequence{
 			&SweepSine{1.0, 0.4, 50, 80},
@@ -25,14 +24,14 @@ var Presets = map[string]Streamer{
 		0.6,
 		0.1,
 	},
-	"P6": &Sequence{
+	"P6": &Stream{
 		&Envelope{
-			&VaryingSine{randomf64(0.5, 1.0), 0.3, randomf64(40.0, 60.0)},
-			0.05,
-			0.04,
+			&VaryingSine{randomf64(0.6, 1.0), 0.2, randomf64(50.0, 80.0)},
+			0.02,
+			0.02,
 			0.6,
-			0.1,
+			0.05,
 		},
-		&Pause{0.2},
+		&VaryingPause{randomf64(0.01, 0.1)},
 	},
 }

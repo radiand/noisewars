@@ -1,7 +1,6 @@
 package synth
 
-import "math/rand"
-
+// Pause generates silence for given duration.
 type Pause struct {
 	Duration Seconds
 }
@@ -18,6 +17,20 @@ func (self *Pause) Time() Seconds {
 	return self.Duration
 }
 
+// VaryingPause generates silence for given duration. Duration may be
+// nondeterministic, thus Time() is not implemented.
+type VaryingPause struct {
+	Duration Provider[Seconds]
+}
+
+func (self *VaryingPause) Stream(sampling int, sink chan<- int16) error {
+	totalSamples := int(self.Duration() * float64(sampling))
+	for range totalSamples {
+		sink <- 0
+	}
+	return nil
+}
+
 func Punch(amplitude Amplitude, duration Seconds, frequency Frequency) FiniteStreamer {
 	return &Envelope{
 		Sound:   &Sine{Amplitude: amplitude, Duration: duration, Frequency: frequency},
@@ -26,20 +39,4 @@ func Punch(amplitude Amplitude, duration Seconds, frequency Frequency) FiniteStr
 		Sustain: 0.4,
 		Release: 0.2,
 	}
-}
-
-// Chaotic adds random pause after the sound.
-type Chaotic struct {
-	Sound    Streamer
-	MinPause Seconds
-	MaxPause Seconds
-}
-
-func (self *Chaotic) Stream(sampling int, sink chan<- int16) error {
-	self.Sound.Stream(sampling, sink)
-	minPauseMs := int(self.MinPause * 1000)
-	maxPauseMs := int(self.MaxPause * 1000)
-	pause := &Pause{Duration: float64(rand.Intn(maxPauseMs-minPauseMs)+minPauseMs) / 1000}
-	pause.Stream(sampling, sink)
-	return nil
 }
