@@ -54,4 +54,17 @@ var Presets = map[string]Streamer{
 		},
 		&Pause{0.2},
 	},
+	"WhiteNoise": &WhiteNoise{
+		Amplitude: 1.0,
+		Duration:  1.0,
+	},
+	"BrownNoise": &LowPass{
+		Sound: &Integrator{
+			Sound: &WhiteNoise{
+				Amplitude: 1.0,
+				Duration:  10.0,
+			},
+		},
+		CutoffFrequency: 200.0,
+	},
 }

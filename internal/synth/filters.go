@@ -1,6 +1,7 @@
 package synth
 
 import "fmt"
+import "math"
 
 // Fade is a simple envelope that controls fade-in and fade-out.
 type Fade struct {
@@ -98,4 +99,39 @@ func (self *Envelope) verify() error {
 		)
 	}
 	return nil
+}
+
+// LowPass cuts higher frequencies above CutoffFrequency.
+type LowPass struct {
+	Sound           StaticStreamer
+	CutoffFrequency Frequency
+}
+
+func (self *LowPass) Stream(sampling int, sink chan<- int16) error {
+	internalSink := make(chan int16, 1024)
+	errCh := make(chan error, 1)
+
+	go func() {
+		errCh <- self.Sound.Stream(sampling, internalSink)
+		close(internalSink)
+	}()
+
+	rc := 1.0 / (2 * math.Pi * float64(self.CutoffFrequency))
+	dt := 1.0 / float64(sampling)
+	alpha := dt / (rc + dt)
+
+	var prev float64 = 0
+
+	for sample := range internalSink {
+		x := float64(sample) / math.MaxInt16
+		prev = prev + alpha*(x-prev)
+		out := int16(prev * math.MaxInt16)
+		sink <- out
+	}
+
+	return <-errCh
+}
+
+func (self *LowPass) Time() Seconds {
+	return self.Sound.Time()
 }
