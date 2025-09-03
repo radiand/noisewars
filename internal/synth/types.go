@@ -4,6 +4,10 @@ package synth
 
 import "math/rand"
 
+type Amplitude = float64
+type Frequency = float64
+type Seconds = float64
+
 // constant always returns same value.
 func constant[T any](value T) func() T {
 	return func() T {

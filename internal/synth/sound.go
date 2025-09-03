@@ -1,9 +1,5 @@
 package synth
 
-type Amplitude = float64
-type Frequency = float64
-type Seconds = float64
-
 // Streamer generates 16bit samples at given sampling rate.
 type Streamer interface {
 	Stream(sampling int, sink chan<- int16) error
