@@ -30,13 +30,3 @@ func (self *VaryingPause) Stream(sampling int, sink chan<- int16) error {
 	}
 	return nil
 }
-
-func Punch(amplitude Amplitude, duration Seconds, frequency Frequency) StaticStreamer {
-	return &Envelope{
-		Sound:   &Sine{Amplitude: amplitude, Duration: duration, Frequency: frequency},
-		Attack:  0.05,
-		Decay:   0.04,
-		Sustain: 0.4,
-		Release: 0.2,
-	}
-}
