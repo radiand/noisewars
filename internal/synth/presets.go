@@ -67,4 +67,57 @@ var Presets = map[string]Streamer{
 		},
 		CutoffFrequency: 200.0,
 	},
+	"Explosion": PresetExplosion(),
+}
+
+// PresetExplosion tries to mimic 2006 techno banger by Kalwi&Remi.
+func PresetExplosion() Streamer {
+	_kick := func(a Amplitude, d Seconds, f Frequency) StaticStreamer {
+		return &Envelope{
+			Sound: &Mixer{
+				&SweepSine{
+					Amplitude: a * 0.4,
+					Duration:  d,
+					StartFreq: f + 50.0,
+					EndFreq:   f,
+				},
+				&Sine{
+					Amplitude: a,
+					Duration:  d,
+					Frequency: f,
+				},
+			},
+			Attack:  0.005,
+			Decay:   0.02,
+			Sustain: 0.8,
+			Release: 0.02,
+		}
+	}
+
+	_beat := func(f Frequency) StaticStreamer {
+		return &StaticSequence{
+			_kick(1.0, 0.2, f),
+			&Pause{0.03},
+			_kick(0.6, 0.2, f),
+		}
+	}
+
+	return &StaticSequence{
+		_beat(E1),
+		&Pause{0.04},
+		_beat(F1),
+		&Pause{0.04},
+		_beat(G1),
+
+		&Pause{0.4},
+
+		_beat(G1),
+		&Pause{0.04},
+		_beat(F1),
+		&Pause{0.04},
+		_beat(E1),
+		&Pause{0.04},
+		_beat(E1),
+		&Pause{0.04},
+	}
 }
