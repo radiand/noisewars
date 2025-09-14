@@ -59,7 +59,7 @@ var Presets = map[string]Streamer{
 		Duration:  1.0,
 	},
 	"BrownNoise": &LowPass{
-		Sound: &Integrator{
+		Sound: &LeakyIntegrator{
 			Sound: &WhiteNoise{
 				Amplitude: 1.0,
 				Duration:  10.0,

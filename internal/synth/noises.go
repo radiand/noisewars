@@ -16,9 +16,9 @@ func (self *WhiteNoise) Stream(sampling int, sink chan<- int16) error {
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	for range totalSamples {
-		sample := 2*rng.Float64() - 1
-		out := int16(self.Amplitude * sample * math.MaxInt16)
-		sink <- out
+		randNumber := 2*rng.Float64() - 1
+		sample := int16(self.Amplitude * randNumber * math.MaxInt16)
+		sink <- sample
 	}
 	return nil
 }
